@@ -7,7 +7,6 @@ import java.sql.*;
 
 public class ShowServlet extends HttpServlet {
 
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
     }
@@ -24,6 +23,7 @@ public class ShowServlet extends HttpServlet {
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
 
+            
             out.println("<table align='center' border=2>");
             out.println("<tr>");
 
