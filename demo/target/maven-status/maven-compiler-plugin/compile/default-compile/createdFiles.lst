@@ -1,0 +1,4 @@
+Backend\RegistrationServlet.class
+Backend\LoginServlet.class
+Backend\LogoutServlet.class
+Backend\ShowServlet.class
