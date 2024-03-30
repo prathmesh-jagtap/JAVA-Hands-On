@@ -7,31 +7,49 @@ import java.sql.*;
 
 public class ShowServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+    Connection con;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        process(request, response);
     }
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        process(request, response);
+    }
 
-        PrintWriter out = resp.getWriter();
+    void process(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+
+        PrintWriter out = response.getWriter();
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            out.println(e.getMessage());
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "192000");
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "192000");
-            PreparedStatement stmt = conn.prepareStatement("select * from user");
-            ResultSet rs = stmt.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
+            Statement stm;
+            stm = con.createStatement();
+            ResultSet rs;
+            rs = stm.executeQuery("select * from user");
+            ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
 
-            
+            out.println("<a href='/register'>Add New User</a>");
             out.println("<table align='center' border=2>");
             out.println("<tr>");
 
             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                 out.println("<th>" + rsmd.getColumnName(i).toUpperCase() + "</th>");
             }
-            out.println("</tr>");
-
             while (rs.next()) {
                 out.println("<tr>");
                 out.println("<td>" + rs.getString(1) + "</td>");
@@ -41,13 +59,11 @@ public class ShowServlet extends HttpServlet {
                 out.println("</tr>");
             }
             out.println("</table>");
-
             rs.close();
-            stmt.close();
-            conn.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            stm.close();
+            con.close();
+        } catch (SQLException e) {
+            out.println(e.getMessage());
         }
     }
 }

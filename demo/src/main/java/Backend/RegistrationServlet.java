@@ -1,52 +1,62 @@
 package Backend;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.sql.*;
 
-class RegistrationServlet extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+    Connection con;
+    PreparedStatement stm;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        process(request, response);
     }
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        PrintWriter out = resp.getWriter();
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        process(request, response);
+    }
 
-        String name = req.getParameter("name");
-        String dob = req.getParameter("dob");
-        String email = req.getParameter("email");
-        String phone = req.getParameter("telephone");
+    void process(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String dob = request.getParameter("dob");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone_no");
+        PrintWriter out = response.getWriter();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Driver loaded!");
+        } catch (ClassNotFoundException e) {
+            out.println(e.getMessage());
+        }
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "192000");
-            PreparedStatement stmt = conn
-                    .prepareStatement("INSERT INTO user(name, dob, email, phone_no) VALUES(?, ?, ?, ?)");
-            stmt.setString(1, name);
-            stmt.setString(2, dob);
-            stmt.setString(3, email);
-            stmt.setString(4, phone);
-            int rs = stmt.executeUpdate();
-            if (rs > 0) {
-                out.print("<p>Record saved successfully!</p>");
-                req.getRequestDispatcher("form.html").include(req, resp);
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "192000");
+            // String Query = "insert into user(name,dob,email,phone_no)" + "values('" +
+            // name + "','" + dob + "','" + email
+            // + "','" + phone + "')";
+            String Query = "INSERT INTO user values(?, ?, ?, ?)";
+            stm = con.prepareStatement(Query);
+            stm.setString(1, name);
+            stm.setString(2, dob);
+            stm.setString(3, email);
+            stm.setString(4, phone);
+            if (stm.executeUpdate() > 0) {
+                response.sendRedirect("show");
             } else {
-                out.println("Unable to enter data!");
+                out.println("<font color='#e00'>Unable to Enter Data</font>");
             }
-            stmt.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            stm.close();
+            con.close();
+        } catch (SQLException e) {
+            out.println("<font color='#e00'>Error:" + e.getMessage() + "</font>");
         }
     }
-
 }
