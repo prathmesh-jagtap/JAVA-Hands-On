@@ -43,7 +43,7 @@ public class ShowServlet extends HttpServlet {
             rs = stm.executeQuery("select * from user");
             ResultSetMetaData rsmd = (ResultSetMetaData) rs.getMetaData();
 
-            out.println("<a href='/register'>Add New User</a>");
+            out.println("<a href='/demo'>Add New User</a>");
             out.println("<table align='center' border=2>");
             out.println("<tr>");
 
