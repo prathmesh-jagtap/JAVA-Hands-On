@@ -1,9 +1,13 @@
-* Pracitcal 5:
+* Practical 5:
   
   Source packages:
-  
-    java/Students/ Files
+   -  java/Students/ Files
   
   Web Pages:
+   -  WebApp/
+
+* Practical 6:
+
+  Source Packages:
+   -  RedirectServlet
   
-    WebApp/
