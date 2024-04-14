@@ -5,7 +5,7 @@
   String password = "your-password";
 
   try {
-    Class.forName("com.mysql.jdbc.Driver");
+    Class.forName("com.mysql.cj.jdbc.Driver");
     Connection connection = DriverManager.getConnection(url, username, password);
     application.setAttribute("connection", connection);
   } catch (Exception e) {
