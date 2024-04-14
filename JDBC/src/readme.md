@@ -1,2 +1,3 @@
-Practical 1 : UserAuthentication
-Practical 2 : Students
+* Practical 1 : UserAuthentication
+
+* Practical 2 : Students
