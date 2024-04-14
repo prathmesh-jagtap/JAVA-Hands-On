@@ -11,7 +11,7 @@
     ResultSet resultSet = statement.executeQuery();
 
     if (resultSet.next()) {
-      response.sendRedirect("dashboard.jsp");
+      response.sendRedirect("db.jsp");
     } else {
       out.println("Invalid username or password.");
     }
